@@ -50,6 +50,7 @@ void MyGLWidget::initializeGL()
         std::cerr << "Error while loading Fragment shader" << std::endl;
     }
 
+
     shaderProg->bindAttributeLocation("position",0);
     if (!shaderProg->link())
     {

@@ -23,9 +23,9 @@ public:
     ~MyGLWidget();
 
     const QString defaultVertexShader =
-            "#version 410 \n"
+            "#version 130 \n"
             "\n"
-            "layout (location = 0) in vec3 position; \n"
+            "in vec3 position; \n"
             "\n"
             "uniform mat4 mvpMatrix;\n"
             "\n"
@@ -35,7 +35,7 @@ public:
             "}\n";
 
     const QString defaultFragmentShader =
-            "#version 410\n"
+            "#version 130\n"
             "\n"
             "uniform vec4 color;\n"
             "\n"
