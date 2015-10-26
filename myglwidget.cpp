@@ -8,6 +8,11 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
     //nothing to do here!
     this->shaderProg = nullptr;
+
+    QSurfaceFormat format;
+    format.setMajorVersion(3);
+    format.setMinorVersion(0);
+    this->setFormat(format);
 }
 
 //=============================================================================
@@ -38,7 +43,7 @@ void MyGLWidget::initializeGL()
 
     glClearColor(0,0,0,1);
 
-    shaderProg = new QOpenGLShaderProgram;
+    shaderProg = new QOpenGLShaderProgram();
 
     if (!shaderProg->addShaderFromSourceCode(QOpenGLShader::Vertex, defaultVertexShader))
     {
@@ -58,6 +63,7 @@ void MyGLWidget::initializeGL()
     }
 
     shaderProg->bind();
+
     mvMatrixLoc = shaderProg->uniformLocation("mvpMatrix");
 
     //setup vao:
@@ -77,10 +83,6 @@ void MyGLWidget::initializeGL()
     f->glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
 
     m_vbo.release();
-
-    vaoBinder.release();
-
-
 
     m_camera.setToIdentity();
     m_camera.translate(0,0,-1);
@@ -109,9 +111,11 @@ void MyGLWidget::paintGL()
 
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 
-    f->glDrawArrays(GL_TRIANGLES,0,6);
+    shaderProg->bind();
+    m_vbo.bind();
 
-    vaoBinder.release();
+
+    f->glDrawArrays(GL_TRIANGLES,0,6);
 }
 
 //=============================================================================

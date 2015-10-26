@@ -26,7 +26,7 @@ public:
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
     const QString defaultVertexShader =
-            "#version 130 \n"
+            "#version 130\n"
             "\n"
             "in vec3 position; \n"
             "\n"
