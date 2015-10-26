@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QPlainTextEdit>
 #include <QWidget>
 #include <QGroupBox>
@@ -18,8 +19,13 @@ public:
 
 protected:
     QGroupBox *centralWidget;
-    QPlainTextEdit *textbox;
+    QGroupBox *codeEditors;
+
+    QPlainTextEdit *fstextbox;
+    QPlainTextEdit *vstextbox;
     QHBoxLayout *hlayout;
+    QVBoxLayout *vlayout;
+
     MyGLWidget *glwidget;
 
 };

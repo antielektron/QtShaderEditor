@@ -87,6 +87,10 @@ void MyGLWidget::initializeGL()
 
     shaderProg->release();
 
+    //debug info:
+    auto version = context()->format().version();
+    std::cout << "Using OpenGL Version " << version.first << "." << version.second << std::endl;
+
 }
 
 //=============================================================================
