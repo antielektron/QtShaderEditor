@@ -110,3 +110,17 @@ void MyGLWidget::paintGL()
     vaoBinder.release();
 }
 
+//=============================================================================
+
+QSize MyGLWidget::minimumSizeHint() const
+{
+    return QSize(50,50);
+}
+
+//=============================================================================
+
+QSize MyGLWidget::sizeHint() const
+{
+    return QSize(400,400);
+}
+

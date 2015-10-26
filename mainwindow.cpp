@@ -10,12 +10,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     textbox = new QPlainTextEdit(centralWidget);
     setCentralWidget(centralWidget);
     centralWidget->setLayout(hlayout);
-    hlayout->addWidget(glwidget);
-    hlayout->addWidget(textbox);
-
-    hlayout->addStretch();
 
 
+    hlayout->addWidget(glwidget,1);
+    hlayout->addWidget(textbox,1);
 
 }
 

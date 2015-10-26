@@ -22,6 +22,9 @@ public:
     MyGLWidget(QWidget *parent = nullptr);
     ~MyGLWidget();
 
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+
     const QString defaultVertexShader =
             "#version 130 \n"
             "\n"
