@@ -12,7 +12,7 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
     QSurfaceFormat format;
     format.setMajorVersion(3);
     format.setMinorVersion(0);
-    this->setFormat(format);
+    //this->setFormat(format);
 }
 
 //=============================================================================
@@ -32,6 +32,7 @@ void MyGLWidget::cleanup()
         delete shaderProg;
     }
     shaderProg = nullptr;
+    std::cout << "cleaning" << std::endl;
     doneCurrent();
 }
 
@@ -41,7 +42,7 @@ void MyGLWidget::initializeGL()
 {
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &MyGLWidget::cleanup);
 
-    glClearColor(0,0,0,1);
+    //glClearColor(0,0,0,1);
 
     shaderProg = new QOpenGLShaderProgram();
 
@@ -107,13 +108,18 @@ void MyGLWidget::resizeGL(int width, int height)
 
 void MyGLWidget::paintGL()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 
     shaderProg->bind();
-    m_vbo.bind();
+    shaderProg->setUniformValue(mvMatrixLoc, m_proj * m_camera);
 
+    m_vbo.bind();
 
     f->glDrawArrays(GL_TRIANGLES,0,6);
 }
