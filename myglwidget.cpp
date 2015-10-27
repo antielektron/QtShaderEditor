@@ -1,7 +1,37 @@
 #include "myglwidget.h"
 #include <iostream>
 
+const QString MyGLWidget::defaultVertexShader =
+        "#version 130\n"
+        "\n"
+        "in vec3 position; \n"
+        "\n"
+        "uniform mat4 mvpMatrix;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = mvpMatrix * vec4(position, 1.);\n"
+        "}\n";
 
+const QString MyGLWidget::defaultFragmentShader =
+        "#version 130\n"
+        "\n"
+        "uniform vec4 color;\n"
+        "\n"
+        "out vec4 outputColor;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "   outputColor = vec4(1.,1.,1.,1.); // color;\n"
+        "}\n";
+
+const std::vector<GLfloat> MyGLWidget::defaultQuad =
+    {-0.3f, -0.3f, 0.0f,
+     0.3f, -0.3f, 0.0f,
+     0.3f, 0.3f, 0.0f,
+     0.3f, 0.3f, 0.0f,
+     -0.3f, 0.3f, 0.0f,
+     -0.3f, -0.3f, 0.0f};
 
 
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
@@ -27,11 +57,7 @@ MyGLWidget::~MyGLWidget()
 void MyGLWidget::cleanup()
 {
     makeCurrent();
-    if (shaderProg)
-    {
-        delete shaderProg;
-    }
-    shaderProg = nullptr;
+    deleteShaderProg();
     std::cout << "cleaning" << std::endl;
     doneCurrent();
 }
@@ -44,26 +70,7 @@ void MyGLWidget::initializeGL()
 
     //glClearColor(0,0,0,1);
 
-    shaderProg = new QOpenGLShaderProgram();
-
-    if (!shaderProg->addShaderFromSourceCode(QOpenGLShader::Vertex, defaultVertexShader))
-    {
-        std::cerr << "Error while loading Vertex Shader" << std::endl;
-    }
-
-    if (!shaderProg->addShaderFromSourceCode(QOpenGLShader::Fragment, defaultFragmentShader))
-    {
-        std::cerr << "Error while loading Fragment shader" << std::endl;
-    }
-
-
-    shaderProg->bindAttributeLocation("position",0);
-    if (!shaderProg->link())
-    {
-        std::cerr << "Error while linking shader Program!" << std::endl;
-    }
-
-    shaderProg->bind();
+    createShaderProgram(MyGLWidget::defaultVertexShader, MyGLWidget::defaultFragmentShader);
 
     mvMatrixLoc = shaderProg->uniformLocation("mvpMatrix");
 
@@ -88,11 +95,62 @@ void MyGLWidget::initializeGL()
     m_camera.setToIdentity();
     m_camera.translate(0,0,-1);
 
-    shaderProg->release();
-
     //debug info:
     auto version = context()->format().version();
     std::cout << "Using OpenGL Version " << version.first << "." << version.second << std::endl;
+
+}
+
+//=============================================================================
+
+void MyGLWidget::deleteShaderProg()
+{
+    if (shaderProg)
+    {
+
+        delete shaderProg;
+    }
+    shaderProg = nullptr;
+}
+
+//=============================================================================
+
+OpenglErrorType MyGLWidget::createShaderProgram(QString vs, QString fs)
+{
+    QOpenGLShaderProgram *newShaderProg = new QOpenGLShaderProgram();
+
+    if (!newShaderProg->addShaderFromSourceCode(QOpenGLShader::Vertex, vs))
+    {
+        std::cerr << "Error while loading Vertex Shader" << std::endl;
+        delete newShaderProg;
+        return OpenglErrorType::vertexShaderError;
+    }
+
+    if (!newShaderProg->addShaderFromSourceCode(QOpenGLShader::Fragment, fs))
+    {
+        std::cerr << "Error while loading Fragment shader" << std::endl;
+        delete newShaderProg;
+        return OpenglErrorType::fragmentShaderError;
+    }
+
+
+    newShaderProg->bindAttributeLocation("position",0);
+    if (!newShaderProg->link())
+    {
+        std::cerr << "Error while linking shader Program!" << std::endl;
+        delete newShaderProg;
+        return OpenglErrorType::linkingError;
+    }
+
+    newShaderProg->bind();
+
+    mvMatrixLoc = newShaderProg->uniformLocation("mvpMatrix");
+
+    newShaderProg->release();
+    shaderProg = newShaderProg;
+    return OpenglErrorType::noError;
+
+
 
 }
 

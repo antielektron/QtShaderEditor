@@ -6,58 +6,51 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     centralWidget = new QGroupBox();
     codeEditorsBox = new QGroupBox(centralWidget);
-    vsStatusBox = new QGroupBox(codeEditorsBox);
-    fsStatusBox = new QGroupBox(codeEditorsBox);
+    statusBox = new QGroupBox(codeEditorsBox);
 
     hlayout = new QHBoxLayout(centralWidget);
     vlayout = new QVBoxLayout(codeEditorsBox);
 
-    vsStatusLayout = new QHBoxLayout(vsStatusBox);
-    fsStatusLayout = new QHBoxLayout(fsStatusBox);
+    statusLayout = new QHBoxLayout(statusBox);
 
     glwidget = new MyGLWidget(centralWidget);
     fstextbox = new CodeEditor(codeEditorsBox);
     vstextbox = new CodeEditor(codeEditorsBox);
 
-    //status stuff:
-    vsAcceptButton = new QPushButton(vsStatusBox);
-    fsAcceptButton = new QPushButton(fsStatusBox);
+    acceptButton = new QPushButton(statusBox);
 
-    vsStatusLabel = new QLabel(vsStatusBox);
-    fsStatusLabel = new QLabel(fsStatusBox);
+    statusLabel = new QLabel(statusBox);
 
     setCentralWidget(centralWidget);
     centralWidget->setLayout(hlayout);
     codeEditorsBox->setLayout(vlayout);
-    vsStatusBox->setLayout(vsStatusLayout);
-    fsStatusBox->setLayout(fsStatusLayout);
+    statusBox->setLayout(statusLayout);
 
     hlayout->addWidget(glwidget,1);
 
     hlayout->addWidget(codeEditorsBox,1);
 
     vlayout->addWidget(vstextbox,1);
-    vlayout->addWidget(vsStatusBox);
 
     vlayout->addWidget(fstextbox,1);
-    vlayout->addWidget(fsStatusBox);
+    vlayout->addWidget(statusBox);
 
-    vsStatusLayout->addWidget(vsAcceptButton);
-    vsStatusLayout->addWidget(vsStatusLabel);
-
-    fsStatusLayout->addWidget(fsAcceptButton);
-    fsStatusLayout->addWidget(fsStatusLabel);
+    statusLayout->addWidget(acceptButton);
+    statusLayout->addWidget(statusLabel);
 
     //set Labels etc:
-    vsAcceptButton->setText("update vertex shader");
-    fsAcceptButton->setText("update fragment shader");
+    acceptButton->setText("update shader");
 
-    vsStatusLabel->setText("vs status:");
-    fsStatusLabel->setText("fs status:");
+    statusLabel->setText("status:");
 
     codeEditorsBox->setTitle("shader editor:");
 
+    //set default shader code:
+    vstextbox->setPlainText(MyGLWidget::defaultVertexShader);
+    fstextbox->setPlainText(MyGLWidget::defaultFragmentShader);
 
+    //connect signals:
+    connect(acceptButton, SIGNAL(clicked()), this, SLOT(updateShader()));
 
 }
 
@@ -70,5 +63,43 @@ MainWindow::~MainWindow()
     //delete hlayout;
     //delete glwidget;
     //delete textbox;
+}
+
+//=============================================================================
+
+void MainWindow::updateShader()
+{
+    OpenglErrorType retVal;
+    retVal = glwidget->createShaderProgram(vstextbox->toPlainText(), fstextbox->toPlainText());
+    switch (retVal)
+    {
+    case OpenglErrorType::noError:
+    {
+        statusLabel->setText("all good");
+        break;
+    }
+    case OpenglErrorType::vertexShaderError:
+    {
+        statusLabel->setText("vertex Shader failed");
+        break;
+    }
+    case OpenglErrorType::fragmentShaderError:
+    {
+        statusLabel->setText("fragment Shader failed");
+        break;
+    }
+    case OpenglErrorType::linkingError:
+    {
+        statusLabel->setText("linking failed");
+        break;
+    }
+    default:
+    {
+        statusLabel->setText("well, you're ******");
+        break;
+    }
+    }
+
+
 }
 

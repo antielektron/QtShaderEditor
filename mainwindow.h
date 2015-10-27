@@ -23,8 +23,7 @@ public:
 protected:
     QGroupBox *centralWidget;
     QGroupBox *codeEditorsBox;
-    QGroupBox *vsStatusBox;
-    QGroupBox *fsStatusBox;
+    QGroupBox *statusBox;
 
     CodeEditor *fstextbox;
     CodeEditor *vstextbox;
@@ -33,16 +32,14 @@ protected:
 
     MyGLWidget *glwidget;
 
-    QHBoxLayout *vsStatusLayout;
-    QHBoxLayout *fsStatusLayout;
+    QHBoxLayout *statusLayout;
 
-    QLabel *vsStatusLabel;
-    QLabel *fsStatusLabel;
+    QLabel *statusLabel;
 
-    QPushButton *vsAcceptButton;
-    QPushButton *fsAcceptButton;
+    QPushButton *acceptButton;
 
-
+protected slots:
+    void updateShader();
 
 };
 

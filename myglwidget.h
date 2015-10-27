@@ -12,6 +12,15 @@
 
 #include <QString>
 #include <vector>
+#include <tuple>
+
+enum class OpenglErrorType {
+    noError,
+    vertexShaderError,
+    fragmentShaderError,
+    linkingError,
+    undefinedError //when this happens, little cute kittens are dying...
+};
 
 class MyGLWidget : public QOpenGLWidget
 {
@@ -25,37 +34,19 @@ public:
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
-    const QString defaultVertexShader =
-            "#version 130\n"
-            "\n"
-            "in vec3 position; \n"
-            "\n"
-            "uniform mat4 mvpMatrix;\n"
-            "\n"
-            "void main()\n"
-            "{\n"
-            "    gl_Position = mvpMatrix * vec4(position, 1.);\n"
-            "}\n";
+    /**
+     * @brief setShader
+     * @param vs vertex Shader
+     * @param fs fragment shader
+     * @return Error type
+     */
+    OpenglErrorType createShaderProgram(QString vs, QString fs);
 
-    const QString defaultFragmentShader =
-            "#version 130\n"
-            "\n"
-            "uniform vec4 color;\n"
-            "\n"
-            "out vec4 outputColor;\n"
-            "\n"
-            "void main()\n"
-            "{\n"
-            "   outputColor = vec4(1.,1.,1.,1.); // color;\n"
-            "}\n";
+    static const QString defaultVertexShader;
 
-    const std::vector<GLfloat> defaultQuad =
-        {-0.3f, -0.3f, 0.0f,
-         0.3f, -0.3f, 0.0f,
-         0.3f, 0.3f, 0.0f,
-         0.3f, 0.3f, 0.0f,
-         -0.3f, 0.3f, 0.0f,
-         -0.3f, -0.3f, 0.0f};
+    static const QString defaultFragmentShader;
+
+    static const std::vector<GLfloat> defaultQuad;
 
 public slots:
     void cleanup();
@@ -65,9 +56,12 @@ protected:
     void paintGL() Q_DECL_OVERRIDE;
     void resizeGL(int width, int height) Q_DECL_OVERRIDE;
 
+    void deleteShaderProg();
+
 
 
     QOpenGLShaderProgram* shaderProg;
+
 
     QMatrix4x4 m_proj;
     QMatrix4x4 m_world;
