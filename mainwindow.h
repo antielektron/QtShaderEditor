@@ -11,6 +11,7 @@
 #include <QLabel>
 
 #include "myglwidget.h"
+#include "codeeditor.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,8 +26,8 @@ protected:
     QGroupBox *vsStatusBox;
     QGroupBox *fsStatusBox;
 
-    QPlainTextEdit *fstextbox;
-    QPlainTextEdit *vstextbox;
+    CodeEditor *fstextbox;
+    CodeEditor *vstextbox;
     QHBoxLayout *hlayout;
     QVBoxLayout *vlayout;
 

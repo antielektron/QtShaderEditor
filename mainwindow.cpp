@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     fsStatusLayout = new QHBoxLayout(fsStatusBox);
 
     glwidget = new MyGLWidget(centralWidget);
-    fstextbox = new QPlainTextEdit(codeEditorsBox);
-    vstextbox = new QPlainTextEdit(codeEditorsBox);
+    fstextbox = new CodeEditor(codeEditorsBox);
+    vstextbox = new CodeEditor(codeEditorsBox);
 
     //status stuff:
     vsAcceptButton = new QPushButton(vsStatusBox);
@@ -54,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     vsStatusLabel->setText("vs status:");
     fsStatusLabel->setText("fs status:");
+
+    codeEditorsBox->setTitle("shader editor:");
 
 
 
