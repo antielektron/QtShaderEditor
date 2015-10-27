@@ -12,7 +12,7 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
     QSurfaceFormat format;
     format.setMajorVersion(3);
     format.setMinorVersion(0);
-    //this->setFormat(format);
+    this->setFormat(format);
 }
 
 //=============================================================================

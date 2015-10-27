@@ -7,6 +7,8 @@
 #include <QPlainTextEdit>
 #include <QWidget>
 #include <QGroupBox>
+#include <QPushButton>
+#include <QLabel>
 
 #include "myglwidget.h"
 
@@ -19,7 +21,9 @@ public:
 
 protected:
     QGroupBox *centralWidget;
-    QGroupBox *codeEditors;
+    QGroupBox *codeEditorsBox;
+    QGroupBox *vsStatusBox;
+    QGroupBox *fsStatusBox;
 
     QPlainTextEdit *fstextbox;
     QPlainTextEdit *vstextbox;
@@ -27,6 +31,17 @@ protected:
     QVBoxLayout *vlayout;
 
     MyGLWidget *glwidget;
+
+    QHBoxLayout *vsStatusLayout;
+    QHBoxLayout *fsStatusLayout;
+
+    QLabel *vsStatusLabel;
+    QLabel *fsStatusLabel;
+
+    QPushButton *vsAcceptButton;
+    QPushButton *fsAcceptButton;
+
+
 
 };
 
