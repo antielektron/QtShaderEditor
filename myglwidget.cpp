@@ -3,6 +3,7 @@
 
 const QString MyGLWidget::defaultVertexShader =
         "#version 130\n"
+        "//Vertex Shader:\n"
         "\n"
         "in vec3 position; \n"
         "\n"
@@ -15,6 +16,7 @@ const QString MyGLWidget::defaultVertexShader =
 
 const QString MyGLWidget::defaultFragmentShader =
         "#version 130\n"
+        "//Fragment Shader:\n"
         "\n"
         "uniform vec4 color;\n"
         "\n"

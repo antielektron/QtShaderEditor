@@ -100,6 +100,8 @@ void MainWindow::updateShader()
     }
     }
 
+    glwidget->update();
+
 
 }
 
